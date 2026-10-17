@@ -1,0 +1,23 @@
+# 构建产物
+android/build/
+android/app/build/
+android/.gradle/
+android/.idea/
+*.apk
+*.aab
+
+# 本机配置（含本机 SDK 路径）
+local.properties
+**/local.properties
+
+# 签名文件
+*.jks
+*.keystore
+
+# 本地临时目录（不含任何源码）
+.wb_tmp/
+.workbuddy/
+
+# 系统文件
+.DS_Store
+Thumbs.db

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">智能开关</string>
+    <string name="credit">由 禁止熬夜 开发</string>
+
+    <!-- 主界面：一律中性文案 -->
+    <string name="scanning">正在扫描智能开关</string>
+    <string name="unnamed_switch">未命名智能开关</string>
+    <string name="data_title">智能开关数据</string>
+    <string name="waiting_data">等待数据…</string>
+    <string name="no_data">（本次未检测到数据）</string>
+    <string name="copy_switch_code">复制智能开关编号</string>
+    <string name="copied">已复制智能开关编号</string>
+    <string name="not_detected">还没检测到智能开关</string>
+    <string name="status_off">未连接</string>
+    <string name="bt_off_msg">请开启手机蓝牙后重试。</string>
+    <string name="bt_off_action">去开启</string>
+    <string name="perm_denied_msg">需要授权后才能使用，请允许相关权限。</string>
+    <string name="perm_denied_forever">相关权限被拒绝。\n请在系统设置里手动允许后重试。</string>
+    <string name="perm_retry">重新授权</string>
+    <string name="settings_action">去系统设置</string>
+
+    <!-- 高级设置页：可出现 MAC、RAW 等技术词 -->
+    <string name="secret_title">高级设置</string>
+    <string name="secret_mac_section">当前锁定 MAC 地址</string>
+    <string name="secret_mac_hint">AA:BB:CC:DD:EE:FF</string>
+    <string name="secret_save">保存</string>
+    <string name="secret_reset">恢复默认</string>
+    <string name="secret_format_section">复制格式</string>
+    <string name="format_spaced">空格分隔：02 01 06 0A ...</string>
+    <string name="format_plain">连续无空格：0201060A...</string>
+    <string name="format_array">0x 数组：0x02, 0x01, 0x06</string>
+    <string name="secret_records_section">记录</string>
+    <string name="secret_view_records">查看记录</string>
+    <string name="secret_clear_records">清空记录</string>
+
+    <!-- 记录页 -->
+    <string name="records_title">历史记录</string>
+    <string name="records_count_hint">共 0 条 / 上限 1000</string>
+    <string name="records_empty">还没有记录。\n检测到变化时会自动记录。</string>
+    <string name="records_tip">点某一行 = 复制该条记录</string>
+    <string name="clear_records">清空</string>
+    <string name="load_more">加载更多</string>
+</resources>

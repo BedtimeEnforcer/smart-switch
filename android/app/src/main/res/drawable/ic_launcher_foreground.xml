@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 智能灯（灯泡）。颜色必须写字面值，不能引用 @color，否则构建期图标生成会报错 -->
+    <group
+        android:scaleX="3"
+        android:scaleY="3"
+        android:translateX="18"
+        android:translateY="18">
+        <!-- 灯身 -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+        <!-- 底座 -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z" />
+    </group>
+</vector>

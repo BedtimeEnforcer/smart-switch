@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#FF101014</color>
+    <color name="bg_card">#FF1C1C22</color>
+    <color name="bg_card_soft">#FF24242C</color>
+    <color name="fg">#FFEDEDF2</color>
+    <color name="fg_dim">#FF9A9AA8</color>
+    <color name="fg_mono">#FF7CE7B0</color>
+    <color name="accent">#FF4C8DFF</color>
+    <color name="ok">#FF3DDC84</color>
+    <color name="warn">#FFFFB347</color>
+    <color name="divider">#FF2E2E38</color>
+    <color name="ic_launcher_background">#FF1C1C22</color>
+</resources>

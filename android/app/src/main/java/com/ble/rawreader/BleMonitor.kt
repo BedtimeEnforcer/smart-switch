@@ -22,7 +22,6 @@ import android.os.Looper
 class BleMonitor(private val context: Context, private val callback: Callback) {
 
     interface Callback {
-        /** 抓到目标设备的一次广播 */
         fun onTargetFound(result: ScanResult)
         /** 需要提示用户的信息（权限不足、蓝牙没开、扫描失败等） */
         fun onMessage(msg: String)
@@ -131,7 +130,6 @@ class BleMonitor(private val context: Context, private val callback: Callback) {
         }
     }
 
-    /** 运行时需要申请的权限清单（Android 12 前后不一样） */
     fun requiredPermissions(): Array<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(

@@ -7,23 +7,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 /**
- * RAW 变化记录的存取。用系统自带的 SQLite（android.database.sqlite 属于 Android 系统 API，
- * 不算第三方依赖），好处是「超出上限删最旧」「按时间倒序」「分页加载」都能一条 SQL 搞定。
- *
- * 表结构：
- *   records(_id INTEGER PRIMARY KEY AUTOINCREMENT, ts INTEGER, raw TEXT)
- *   - ts  毫秒时间戳（建了索引，用于倒序查询）
- *   - raw 十六进制字符串，存空格分隔格式，界面可直接展示
- *
- * 写入规则：
- *   1. 内存里缓存「数据库最新一条 RAW」，广播包来了先在内存比对，相同就直接返回，
- *      一次数据库操作都不做（广播包每秒能来好几个，必须挡在数据库外面）。
- *   2. 只有真的变化了才落库；第一条无条件插入。
- *   3. 插入后若总数超过 [MAX_RECORDS]，删掉最旧的若干条。
+ * RAW 变化记录的存取，用系统自带的 SQLite，不引第三方库。
+ * 表 records(_id, ts, raw)，raw 存空格分隔的十六进制串。
+ * 广播包每秒能来好几个，所以先在内存里跟最新一条比对，变了才落库；
+ * 超过 MAX_RECORDS 条就删最旧的。
  */
 object RecordStore {
 
-    /** 记录条数上限 */
     const val MAX_RECORDS = 1000
 
     private const val DB_NAME = "raw_records.db"
@@ -34,19 +24,15 @@ object RecordStore {
     private const val COL_TS = "ts"
     private const val COL_RAW = "raw"
 
-    /** 数据库 helper 单例，整个进程只 new 一次 */
     @Volatile
     private var helperRef: DbHelper? = null
 
-    /** 内存缓存：数据库里最新一条的 RAW，用于快速比对 */
     @Volatile
     private var cachedLastRaw: String? = null
 
-    /** 缓存是否已从数据库加载过 */
     @Volatile
     private var cacheReady: Boolean = false
 
-    /** 一条记录 */
     data class Record(
         val id: Long,
         val ts: Long,
@@ -61,7 +47,7 @@ object RecordStore {
         }
     }
 
-    /** 预热：建库并把「最新一条 RAW」读进内存。可在主线程调，开销极小。 */
+    // 预热：建库并把最新一条 RAW 读进内存，主线程调也没事
     fun init(ctx: Context) {
         ensureLastRaw(ctx)
     }
@@ -83,11 +69,7 @@ object RecordStore {
         }
     }
 
-    /**
-     * 收到一个新的 RAW，跟数据库最新一条比对，不同才写入。
-     *
-     * @return true 表示真的新插入了一条（调用方可以据此刷新条数）
-     */
+    // 跟最新一条比对，不同才写入；返回 true 表示真的插入了一条
     fun appendIfChanged(ctx: Context, raw: String): Boolean {
         val value = raw.trim()
         if (value.isEmpty()) return false
@@ -118,7 +100,6 @@ object RecordStore {
         return inserted
     }
 
-    /** 总数超过上限时，删掉最旧的若干条 */
     private fun trimToLimit(db: SQLiteDatabase) {
         val total = DatabaseUtils.queryNumEntries(db, TABLE)
         if (total <= MAX_RECORDS) return
@@ -130,13 +111,11 @@ object RecordStore {
         )
     }
 
-    /** 当前记录总条数 */
     fun count(ctx: Context): Int {
         val total = DatabaseUtils.queryNumEntries(helper(ctx).readableDatabase, TABLE)
         return if (total > Int.MAX_VALUE) Int.MAX_VALUE else total.toInt()
     }
 
-    /** 按时间倒序分页取记录：最新的一条在最前面 */
     fun loadPage(ctx: Context, limit: Int, offset: Int): List<Record> {
         val out = ArrayList<Record>(limit.coerceAtLeast(0))
         if (limit <= 0) return out
@@ -158,7 +137,6 @@ object RecordStore {
         return out
     }
 
-    /** 清空全部记录 */
     fun clear(ctx: Context) {
         val db = helper(ctx).writableDatabase
         db.beginTransaction()
@@ -172,7 +150,6 @@ object RecordStore {
         cacheReady = true
     }
 
-    /** 数据库帮助类（单例持有） */
     private class DbHelper(ctx: Context) : SQLiteOpenHelper(ctx, DB_NAME, null, DB_VERSION) {
 
         override fun onCreate(db: SQLiteDatabase) {

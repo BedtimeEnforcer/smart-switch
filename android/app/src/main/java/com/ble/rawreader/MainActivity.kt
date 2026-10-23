@@ -20,28 +20,16 @@ import android.widget.TextView
 import android.widget.Toast
 
 /**
- * 主界面。
- *
- * 界面上只显示「智能开关」相关的中性文案：设备名、信号、数据、一个复制按钮。
- * MAC 地址、RAW、ASCII、字节数、更新时间等均不在主界面出现。
- *
- * 功能一点没少：
- *   1. 打开 → 直接用配置里的目标 MAC（默认占位值，需自行设置）开始扫描
- *   2. 扫到该 MAC → 把数据（十六进制）显示出来
- *   3. 点「复制智能开关编号」拷走；长按复制按钮 = 复制连续无空格版本
- *   4. 数据每次变化会写一条记录（相同则不重复写），最多 1000 条
- *
- * 高级设置入口：连续点顶部标题 10 次 → 进 SecretActivity（改 MAC / 复制格式 / 记录）。
+ * 主界面：只显示目标设备的信号和数据，加一个复制按钮；
+ * MAC、RAW 这些技术信息不上界面。改 MAC 在高级设置里（连点标题 10 次进入）。
+ * 数据变化时写一条记录，上限 1000 条，细节见 RecordStore。
  */
 class MainActivity : Activity() {
 
     companion object {
         private const val REQ_PERMISSION = 1001
 
-        /** 连续点击标题多少次进入高级设置 */
         private const val SECRET_CLICK_COUNT = 10
-
-        /** 两次点击间隔超过这个毫秒数就重新计数 */
         private const val SECRET_CLICK_WINDOW = 3000L
 
         private const val FORMAT_SPACED = 0   // 02 01 06 ...
@@ -63,13 +51,8 @@ class MainActivity : Activity() {
     private lateinit var tvBlockedMsg: TextView
     private lateinit var btnBlockedAction: Button
 
-    /** 最近一次抓到的数据，复制时用 */
     private var lastRaw: ByteArray? = null
-
-    /** 记录库是否已预热过（只做一次） */
     private var storeReady: Boolean = false
-
-    /** 标题连点计数，用于进入高级设置 */
     private var titleClickCount: Int = 0
     private var lastTitleClickTime: Long = 0L
 
